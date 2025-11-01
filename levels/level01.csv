@@ -1,0 +1,27 @@
+## START METADATA ##
+LevelNumber,1
+Budget,2
+## END METADATA ##
+## START TERRAIN ##
+..........
+......xxxx
+......xxxx
+1PPPPPPPPP
+......xxxx
+......xxxx
+..........
+..........
+## END TERRAIN ##
+## START ENEMIES ##
+Enemy Type,Level,Wave Index,Path Index
+Grunt,1,1,1
+Grunt,1,1,1
+Grunt,1,2,1
+Grunt,1,2,1
+Grunt,1,3,1
+Grunt,1,3,1
+Grunt,1,3,1
+Heavy,1,2,1
+Heavy,1,3,1
+Heavy,1,3,1
+## END ENEMIES ##
