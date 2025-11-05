@@ -70,7 +70,7 @@ public class GameState {
      * 
      * @param cell
      */
-    public void placeOrRotateTower(Cell cell) {
+    public void placeOrRotateTower(Cell cell, boolean isLeftClick) {
         if (this.selectedTowerType == null) {
             return;
         }
@@ -87,7 +87,7 @@ public class GameState {
                 continue;
             }
             if (tower == this.selectedTower) {
-                tower.rotate();
+                tower.rotate(isLeftClick);
                 return;
             } else {
                 this.selectedTower = tower;

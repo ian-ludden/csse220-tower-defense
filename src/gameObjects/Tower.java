@@ -114,8 +114,12 @@ public abstract class Tower extends DrawableObject {
     /**
      * Rotates the tower by a small amount. 
      */
-    public void rotate() {
-        this.launchAngleDegrees += ROTATE_DELTA_DEGREES;
+    public void rotate(boolean isLeft) {
+        if (isLeft) {
+            this.launchAngleDegrees += ROTATE_DELTA_DEGREES;
+        } else {
+            this.launchAngleDegrees -= ROTATE_DELTA_DEGREES;
+        }
     }
 
     /**

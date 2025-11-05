@@ -83,7 +83,7 @@ public class GameComponent extends JComponent implements MouseListener, KeyListe
     }
 
     public void mouseClicked(MouseEvent e) {
-        this.gameState.placeOrRotateTower(Cell.getCellFromCoordinates(e.getX(), e.getY()));
+        this.gameState.placeOrRotateTower(Cell.getCellFromCoordinates(e.getX(), e.getY()), e.getButton() == MouseEvent.BUTTON1);
         this.repaint();
     }
 
