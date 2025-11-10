@@ -15,6 +15,7 @@ public class Heavy extends Enemy {
     public Heavy(Cell startCell) {
         super(startCell);
         this.armorClass = DEFAULT_ARMOR_CLASS;
+        this.scaleSize(1.5);
     }
 
     public void collideWith(Projectile projectile) {

@@ -86,6 +86,11 @@ public abstract class Enemy extends DrawableObject {
         this.previousCell = null;
         this.currentCell = startingCell;
     }
+
+    protected void scaleSize(double scaleFactor) {
+        this.width = (int) (DEFAULT_WIDTH * scaleFactor);
+        this.height = (int) (DEFAULT_HEIGHT * scaleFactor);
+    }
     
     /**
      * Advances the enemy to the next cell in its path. 

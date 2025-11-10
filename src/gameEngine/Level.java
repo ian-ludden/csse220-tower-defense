@@ -31,6 +31,7 @@ public class Level {
     private int levelNumber;
     private int budget;
     private int currentWaveIndex;
+    private int maxWaveIndex;
     private char[][] terrain;
     /**
      * Maps a wave and path string representation to a list of enemies. 
@@ -53,8 +54,9 @@ public class Level {
      * @param filename
      */
     public Level(String filename) {
-        this.budget = DEFAULT_BUDGET; 
+        this.budget = DEFAULT_BUDGET;
         this.currentWaveIndex = 0;
+        this.maxWaveIndex = 0;
         this.terrain = new char[NUM_ROWS][NUM_COLS];
         this.waveAndPathToEnemies = new HashMap<String, ArrayList<Enemy>>();
         this.pathToStartCell = null;
@@ -174,6 +176,8 @@ public class Level {
      * @param filename
      */
     private void loadEnemies(String filename) {
+        this.maxWaveIndex = 0;
+
         if (this.pathToStartCell == null) {
             this.findPathToStartCells();
         }
@@ -208,6 +212,10 @@ public class Level {
                 int waveIndex = Integer.parseInt(tokens[2]);
                 int pathIndex = Integer.parseInt(tokens[3]);
 
+                if (waveIndex > this.maxWaveIndex) {
+                    this.maxWaveIndex = waveIndex;
+                }
+
                 // Create a new empty list of enemies for this wave and path if it doesn't already exist
                 String key = "Wave" + waveIndex + "_Path" + pathIndex;
                 if (!this.waveAndPathToEnemies.containsKey(key)) {
@@ -219,6 +227,8 @@ public class Level {
             e.printStackTrace();
             System.exit(1);
         }
+
+
     }
 
     private Enemy createEnemy(String enemyType, int level, int pathIndex) {
@@ -259,7 +269,7 @@ public class Level {
     }
 
     public int getTotalWaves() {
-        return this.waveAndPathToEnemies.size();
+        return this.maxWaveIndex;
     }
 
     /**
@@ -347,7 +357,6 @@ public class Level {
             g2d.drawLine(col * Cell.SQUARE_SIZE, 0, col * Cell.SQUARE_SIZE, NUM_ROWS * Cell.SQUARE_SIZE);
         }
     }
-
 
     /**
      * Returns the next level in the game, or null if there is no next level. 

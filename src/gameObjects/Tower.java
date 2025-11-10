@@ -1,6 +1,8 @@
 package gameObjects;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 
 import gameEngine.Cell;
 
@@ -14,8 +16,8 @@ public abstract class Tower extends DrawableObject {
     public static final int ROTATE_DELTA_DEGREES = 15;
     private static final int DEFAULT_COST_TO_BUILD = 1;
     private static final int DEFAULT_COST_TO_UPGRADE = 1;
-    private static final int DEFAULT_FIRE_RATE = 5;
-    private static final double DEFAULT_LAUNCH_ANGLE_DEGREES = 0;
+    private static final int DEFAULT_FIRE_RATE = 8;
+    private static final double DEFAULT_LAUNCH_ANGLE_DEGREES = 180.0;
 
     private static final Color DEFAULT_COLOR = new Color(120, 80, 50);
 
@@ -47,6 +49,10 @@ public abstract class Tower extends DrawableObject {
      * The cell that the tower is placed on. 
      */
     private Cell cell;
+    /**
+     * The color of the tower for drawing.
+     */
+    private Color color;
 
     /**
      * Constructs a tower at the given cell. 
@@ -61,6 +67,7 @@ public abstract class Tower extends DrawableObject {
         this.fireRate = DEFAULT_FIRE_RATE;
         this.ticksRemaining = DEFAULT_FIRE_RATE;
         this.launchAngleDegrees = DEFAULT_LAUNCH_ANGLE_DEGREES;
+        this.color = DEFAULT_COLOR;
     }
 
     /**
@@ -77,6 +84,15 @@ public abstract class Tower extends DrawableObject {
 
     public double getLaunchAngleDegrees() {
         return launchAngleDegrees;
+    }
+
+    protected void setColor(Color newColor) {
+        this.color = newColor;
+    }
+
+    protected void setFireRate(int newFireRate) {
+        this.fireRate = newFireRate;
+        this.ticksRemaining = newFireRate;
     }
 
     /**
@@ -156,13 +172,50 @@ public abstract class Tower extends DrawableObject {
 
     @Override
     public void drawFallbackShape(Graphics2D g2d) {
-        // Draw a circle to represent the tower
-        g2d.setColor(DEFAULT_COLOR);
-        g2d.fillOval(this.getX() + Cell.SQUARE_SIZE / 4, this.getY() + Cell.SQUARE_SIZE / 4, Cell.SQUARE_SIZE / 2, Cell.SQUARE_SIZE / 2);
+        // Draw a filled circle to represent the tower
+        g2d.setColor(this.color);
+        g2d.fill(this.constructShape());
 
         // Add a small line to represent the launch angle
         g2d.setColor(Color.BLACK);
-        g2d.drawLine(this.getX() + Cell.SQUARE_SIZE / 2, this.getY() + Cell.SQUARE_SIZE / 2, (int)(this.getX() + Cell.SQUARE_SIZE / 2 + Math.cos(Math.toRadians(this.launchAngleDegrees)) * Cell.SQUARE_SIZE / 2), (int)(this.getY() + Cell.SQUARE_SIZE / 2 + Math.sin(Math.toRadians(this.launchAngleDegrees)) * Cell.SQUARE_SIZE / 2));
+        g2d.draw(this.constructBarrel());
+
+        // Add tower level in top right corner of cell
+        this.drawLevel(g2d);
+    }
+
+    private void drawLevel(Graphics2D g2d) {
+        Graphics2D g2 = (Graphics2D) g2d.create();
+        // decrease font size
+        g2.setFont(g2.getFont().deriveFont(10.0f));
+        String levelStr = "Lvl. " + this.level;
+        FontMetrics fm = g2.getFontMetrics();
+        int strWidth = fm.stringWidth(levelStr);
+        int strHeight = fm.getAscent();
+        int padding = 2;
+        int xPos = this.getX() + Cell.SQUARE_SIZE - strWidth - padding;
+        int yPos = this.getY() + strHeight + 2 * padding;
+        g2.setColor(Color.BLACK);
+        g2.drawString(levelStr, xPos, yPos);
+    }
+
+    /**
+     * Return a java.awt.Shape object to be filled to draw this
+     * @return
+     */
+    protected Shape constructShape() {
+        return new Ellipse2D.Double(
+                this.getX() + Cell.SQUARE_SIZE / 4.0,
+                this.getY() + Cell.SQUARE_SIZE / 4.0,
+                Cell.SQUARE_SIZE / 2.0,
+                Cell.SQUARE_SIZE / 2.0);
+    }
+
+    private Line2D constructBarrel() {
+        return new Line2D.Double(this.getX() + Cell.SQUARE_SIZE / 2.0,
+                this.getY() + Cell.SQUARE_SIZE / 2.0,
+                this.getX() + Cell.SQUARE_SIZE / 2.0 + Math.cos(Math.toRadians(this.launchAngleDegrees)) * Cell.SQUARE_SIZE / 2,
+                this.getY() + Cell.SQUARE_SIZE / 2.0 + Math.sin(Math.toRadians(this.launchAngleDegrees)) * Cell.SQUARE_SIZE / 2.0);
     }
 
     /**

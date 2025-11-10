@@ -2,7 +2,6 @@ package gameEngine;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
@@ -27,8 +26,11 @@ import gameObjects.towers.MissileTower;
  */
 public class GameState {
     private static final int ENEMY_SPAWN_DELAY_TICKS = 8;
+    private static final int BUDGET_WAVE_NUMBER_MULTIPLIER = 1;
+    private static final int DEFAULT_NUM_LIVES = 5;
 
     private int budgetRemaining;
+    private int livesRemaining;
     private String selectedTowerType;
 
     private Tower selectedTower;
@@ -48,6 +50,7 @@ public class GameState {
         this.selectedTowerType = TowerDefenseMain.DEFAULT_TOWER_TYPE;
         this.currentLevel = new Level("levels/level01.csv");
         this.budgetRemaining = this.currentLevel.getBudget();
+        this.livesRemaining = DEFAULT_NUM_LIVES;
     }
     
     private void handleCollisions() {
@@ -137,13 +140,22 @@ public class GameState {
         }
     }
 
+    /**
+     * Draws the remaining lives in the top left corner.
+     * @param g2d
+     */
+    private void drawLivesRemaining(Graphics2D g2d) {
+        g2d.setColor(Color.RED);
+        g2d.drawString("Lives: " + this.livesRemaining, Cell.SQUARE_SIZE / 4, Cell.SQUARE_SIZE / 2);
+    }
+
     public boolean isActiveWave() {
         return !this.enemies.isEmpty();
     }
 
     public void endWave() {
         this.projectiles.clear();
-        this.budgetRemaining += this.getCurrentWaveNumber() * this.currentLevel.getBudget();
+        this.budgetRemaining += BUDGET_WAVE_NUMBER_MULTIPLIER * this.getCurrentWaveNumber() * this.currentLevel.getBudget();
 
         if (this.getCurrentWaveNumber() > this.currentLevel.getTotalWaves()) {
             JOptionPane.showMessageDialog(null, "Level Complete! Advancing to next level.");
@@ -180,7 +192,16 @@ public class GameState {
     }
 
     public void updateState() {
-        this.enemies.forEach(e -> e.advance(this.currentLevel));
+        for (Enemy enemy : this.enemies) {
+            boolean didNotReachEnd = enemy.advance(this.currentLevel);
+            if (!didNotReachEnd) {
+                this.livesRemaining--;
+                if (this.livesRemaining <= 0) {
+                    JOptionPane.showMessageDialog(null, "Game Over! You have run out of lives.");
+                    System.exit(0);
+                }
+            }
+        }
         this.projectiles.forEach(Projectile::fly);
 
         for (Tower tower : this.towers) {
@@ -231,6 +252,18 @@ public class GameState {
         String budgetText = "Budget: $" + this.budgetRemaining;
         g2d.setColor(Color.BLACK);
         g2d.drawString(budgetText, TowerDefenseMain.GAME_WINDOW_SIZE.width - Cell.SQUARE_SIZE * 3,  Cell.SQUARE_SIZE / 2);
+
+        // Draw remaining lives in top left corner
+        this.drawRemainingLives(g2d);
+    }
+
+    /**
+     * Draws the remaining lives in the top left corner.
+     * @param g2d
+     */
+    private void drawRemainingLives(Graphics2D g2d) {
+        g2d.setColor(Color.RED);
+        g2d.drawString("Lives: " + this.livesRemaining, Cell.SQUARE_SIZE / 4, Cell.SQUARE_SIZE / 2);
     }
 
     public void setSelectedTowerType(String towerType) {

@@ -18,20 +18,37 @@ public abstract class Projectile extends DrawableObject {
     
     protected Point2D location;
     protected double launchAngleDegrees;
+    private int damagePerLevel;
     private int towerLevel;
     protected double speed;
     protected int damagePoints;
     protected boolean isArmorPiercing;
     private boolean shouldRemove;
+    private Color color;
 
     public Projectile(Point2D startLocation, double launchAngleDegrees, int towerLevel) {
         this.location = startLocation;
         this.launchAngleDegrees = launchAngleDegrees;
         this.towerLevel = towerLevel;
         this.speed = DEFAULT_SPEED;
-        this.damagePoints = DEFAULT_DAMAGE * towerLevel;
+        this.damagePerLevel = DEFAULT_DAMAGE;
+        this.damagePoints = this.damagePerLevel * towerLevel;
         this.isArmorPiercing = false;
         this.shouldRemove = false;
+        this.color = DEFAULT_COLOR;
+    }
+
+    protected void setColor(Color newColor) {
+        this.color = newColor;
+    }
+
+    protected void setArmorPiercing(boolean isArmorPiercing) {
+        this.isArmorPiercing = isArmorPiercing;
+    }
+
+    protected void setDamagePerLevel(int damagePerLevel) {
+        this.damagePerLevel = damagePerLevel;
+        this.damagePoints = this.damagePerLevel * this.towerLevel;
     }
 
     public boolean isArmorPiercing() {
@@ -78,8 +95,11 @@ public abstract class Projectile extends DrawableObject {
         Rectangle2D rect = new Rectangle2D.Double(getX(), getY(), DEFAULT_LENGTH, DEFAULT_WIDTH);
         Graphics2D g2 = (Graphics2D) g2d.create();
         g2.rotate(Math.toRadians(launchAngleDegrees), rect.getCenterX(), rect.getCenterY());
-        g2.setColor(DEFAULT_COLOR);
+        g2.setColor(this.color);
         g2.fill(rect);
+        // Add black outline
+        g2.setColor(Color.BLACK);
+        g2.draw(rect);
         g2.dispose();
     }
 

@@ -40,7 +40,7 @@ public class TowerDefenseMain {
         upgradeTowerButton.addActionListener(gameComponent);
 		controlPanel.add(upgradeTowerButton);
 		controlPanel.add(new JLabel("Select Tower Type: "));
-        ArrayList<String> towerTypes = new ArrayList<String>(Arrays.asList("Archer", "Missile", "Laser"));
+        ArrayList<String> towerTypes = new ArrayList<String>(Arrays.asList("Archer", "Missile", "Cannon"));
 		JComboBox<String> towerTypeComboBox = new JComboBox<String>(towerTypes.toArray(new String[0]));
 		towerTypeComboBox.setSelectedIndex(towerTypes.indexOf(DEFAULT_TOWER_TYPE));
 		towerTypeComboBox.addActionListener(gameComponent);
