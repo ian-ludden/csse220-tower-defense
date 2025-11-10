@@ -157,11 +157,12 @@ public class GameState {
         this.projectiles.clear();
         this.budgetRemaining += BUDGET_WAVE_NUMBER_MULTIPLIER * this.getCurrentWaveNumber() * this.currentLevel.getBudget();
 
-        if (this.getCurrentWaveNumber() > this.currentLevel.getTotalWaves()) {
+        if (this.getCurrentWaveNumber() >= this.currentLevel.getTotalWaves()) {
             JOptionPane.showMessageDialog(null, "Level Complete! Advancing to next level.");
             boolean hasNextLevel = this.advanceLevel();
             if (!hasNextLevel) {
                 JOptionPane.showMessageDialog(null, "Congratulations! You have completed all levels!");
+                System.exit(0);
             }
         }
     }

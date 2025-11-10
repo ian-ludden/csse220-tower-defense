@@ -49,6 +49,11 @@ public abstract class Enemy extends DrawableObject {
     private boolean shouldRemove;
 
     /**
+     * The level of the enemy.
+     */
+    private int level;
+
+    /**
      * The amount of jitter in the x direction.
      */
     private int jitterX;
@@ -80,6 +85,19 @@ public abstract class Enemy extends DrawableObject {
         // Randomly add jitter so enemies aren't stacked on top of each other
         this.jitterX = (int) (Math.random() * DEFAULT_WIDTH) - width / 2;
         this.jitterY = (int) (Math.random() * height) - height / 2;
+
+        this.level = 1;
+    }
+
+    public Enemy(Cell startingCell, int level) {
+        this(startingCell);
+        this.level = level;
+        this.setHPByLevel();
+    }
+
+    protected void setHPByLevel() {
+        this.maxHitPoints = DEFAULT_MAX_HIT_POINTS * this.level;
+        this.currentHitPoints = this.maxHitPoints;
     }
 
     public void setStartingCell(Cell startingCell) {

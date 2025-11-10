@@ -9,8 +9,8 @@ import gameEngine.Cell;
 
 public class Grunt extends Enemy {
 
-    public Grunt(Cell startCell) {
-        super(startCell);
+    public Grunt(Cell startCell, int level) {
+        super(startCell, level);
     }
 
 }

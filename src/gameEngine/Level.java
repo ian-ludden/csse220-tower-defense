@@ -234,9 +234,9 @@ public class Level {
     private Enemy createEnemy(String enemyType, int level, int pathIndex) {
         Cell startCell = this.pathToStartCell.get(pathIndex);
         if (enemyType.equals("Grunt")) {
-            return new Grunt(startCell);
+            return new Grunt(startCell, level);
         } else if (enemyType.equals("Heavy")) {
-            return new Heavy(startCell);
+            return new Heavy(startCell, level);
         } else {
             throw new IllegalArgumentException("Unsupported enemy type: " + enemyType);
         }

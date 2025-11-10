@@ -12,8 +12,8 @@ public class Heavy extends Enemy {
 
     private int armorClass;
 
-    public Heavy(Cell startCell) {
-        super(startCell);
+    public Heavy(Cell startCell, int level) {
+        super(startCell, level);
         this.armorClass = DEFAULT_ARMOR_CLASS;
         this.scaleSize(1.5);
     }
