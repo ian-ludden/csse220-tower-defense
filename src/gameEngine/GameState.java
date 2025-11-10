@@ -10,6 +10,7 @@ import gameObjects.GridSnappedObject;
 import gameObjects.Projectile;
 import gameObjects.Tower;
 import gameObjects.towers.ArcherTower;
+import gameObjects.towers.Cannon;
 import gameObjects.towers.MissileTower;
 
 /**
@@ -134,8 +135,9 @@ public class GameState {
             return new ArcherTower(cell);
         } else if (towerType.equals("Missile")) {
             return new MissileTower(cell);
-        } else {//if (towerType.equals("Laser")) {
-            // return new LaserTower();
+        } else if (towerType.equals("Cannon")) {
+            return new Cannon(cell);
+        } else {
             throw new IllegalArgumentException("Unsupported tower type: " + towerType);
         }
     }
